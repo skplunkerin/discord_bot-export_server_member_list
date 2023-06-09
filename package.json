@@ -1,0 +1,13 @@
+{
+  "name": "discord_bot-export_server_member_list",
+  "version": "0.0.1",
+  "description": "Testing exporting list of Discord server members to a file for later processing",
+  "main": "index.js",
+  "scripts": {},
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "discord.js": "^14.11.0",
+    "dotenv": "^16.1.4"
+  }
+}
