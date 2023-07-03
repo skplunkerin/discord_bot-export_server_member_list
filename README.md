@@ -1,8 +1,7 @@
 # README
 
-Example bot code for getting list of guild members and adding them to a CSV file
-if the first 4 digits of the user id is found in the
-`discord_user_discriminators.json` array file.
+Example bot code for getting list of guild role members and adding them to a CSV
+file.
 
 ## Project setup:
 
@@ -10,9 +9,10 @@ if the first 4 digits of the user id is found in the
 
    - have the bot with the correct `GUILD_MEMBERS` servers member privileged
      intent
-   - have the bot added to the NT server
+   - make sure the bot is added to the Discord server you need members for
    - get the bot `TOKEN` added to the ENV variable
-   - get the NT server ID added to the ENV variable
+   - get the Discord Guild (server) ID added to the ENV variable
+   - get the Discord server Role ID(s) added to the ENV variable
 
 2. Setup project:
 
@@ -21,10 +21,6 @@ if the first 4 digits of the user id is found in the
 
    cp .env.sample .env
    # populate ENV variables
-
-   cp src/discord_user_discriminators.json.sample src/discord_user_discriminators.json
-   # populate file with discriminators from nttools `Profile` table data
-   # (pull the digits out of the `Profile.discordUser` column)
    ```
 
 3. Run 🏃:
@@ -33,15 +29,21 @@ if the first 4 digits of the user id is found in the
    node src/bot_export_guild_members_list.js
    ```
 
-4. The CSV file will be saved to the project root, use that for next steps in
-   fixing the `Profile`'s
+4. If the Role is found a CSV file will be saved containing any members with the
+   role (empty file means no members with the role were found).
+
+   The CSV headers in the file are:
+
+   ```csv
+   userId,userIsBot,hasMigratedUsername,guildMemberNickname,userGlobalName,userUsername,userDiscriminator,pendingGuildMember,guildMemberRoles
+   ```
 
 ## TODO:
 
 - **Needed:**
 
   - [ ] add ability to deal with picking up from where last run ended at for
-        when the program ends early (NT server has 41K+ members)
+        when the program ends early (i.e. if any errors happen)
   - [ ] deal with errors that might abruptly stop the code (ie, rate limit,
         network loss, other?)
 
