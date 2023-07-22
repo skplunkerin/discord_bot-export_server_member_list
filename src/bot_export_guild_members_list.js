@@ -46,14 +46,26 @@ function getCsvDataForMembers(members) {
 
     // if discriminator is "0", then the user has migrated their username
     const hasMigratedUsername = discriminator === "0";
-    // Remove commas from nickname
-    const sanitizedNickname = nickname ? nickname.replace(/,/g, "") : "";
+    // Wrap all names in quotes if they have a comma in them to prevent commas
+    // from breaking the CSV format
+    let quotedNickname = nickname ? nickname : "";
+    if (quotedNickname.includes(",")) {
+      quotedNickname = `"${quotedNickname}"`;
+    }
+    let quotedUserGlobalName = userGlobalName ? userGlobalName : "";
+    if (quotedUserGlobalName.includes(",")) {
+      quotedUserGlobalName = `"${quotedUserGlobalName}"`;
+    }
+    let quotedUsername = username ? username : "";
+    if (quotedUsername.includes(",")) {
+      quotedUsername = `"${quotedUsername}"`;
+    }
     // Join roles array into a comma-separated string and wrap in quotes to
     // prevent commas from breaking the CSV format
-    const sanitizedRoles = _roles ? `"${_roles.join(",")}"` : "";
+    const joinedRoles = _roles ? `"${_roles.join(",")}"` : "";
 
     // create the csvData row for this member
-    csvData += `${id},${bot},${hasMigratedUsername},${sanitizedNickname},${userGlobalName},${username},${discriminator},${pending},${sanitizedRoles}\n`;
+    csvData += `${id},${bot},${hasMigratedUsername},${quotedNickname},${quotedUserGlobalName},${quotedUsername},${discriminator},${pending},${joinedRoles}\n`;
     membersProcessed++;
   });
   console.log("\tmembers processed:", membersProcessed);
