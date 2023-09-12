@@ -1,7 +1,7 @@
 {
   "name": "discord_bot-export_server_member_list",
-  "version": "0.0.1",
-  "description": "Testing exporting list of Discord server members to a file for later processing",
+  "version": "0.0.2",
+  "description": "Testing exporting list of Discord server members and other server members tasks",
   "main": "index.js",
   "scripts": {},
   "author": "",

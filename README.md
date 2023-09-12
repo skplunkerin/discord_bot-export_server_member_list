@@ -26,7 +26,11 @@ file.
 3. Run 🏃:
 
    ```sh
-   node src/bot_export_guild_members_list.js
+   # Export list of guild members in CSV
+   node src/export_guild_members_list.js
+
+   # Get list of all Discord server roles for given userId
+   node src/get_discord_roles_for_member_ids.js
    ```
 
 4. If the Role is found a CSV file will be saved containing any members with the

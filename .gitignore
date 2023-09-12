@@ -1,4 +1,4 @@
 .env
 *.csv
 node_modules
-src/discord_user_discriminators.json
+src/profile_ids-server_member_ids.json
