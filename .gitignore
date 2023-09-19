@@ -1,4 +1,4 @@
 .env
 *.csv
 node_modules
-src/profile_ids-server_member_ids.json
+src/jsons/*
