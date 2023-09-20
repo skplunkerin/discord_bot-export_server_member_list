@@ -35,6 +35,18 @@ function readFile(filePath) {
  */
 client.once(Events.ClientReady, async () => {
   const guild = client.guilds.resolve(process.env.DISCORD_GUILD_ID);
+  const formattedDate = new Date().toISOString(); // Format date as 'YYYY-MM-DDThh:mm:ssZ'
+  const fileName = `upsert_profile_discord_roles-${formattedDate}.sql`;
+
+  // Initialize the file with a header
+  fs.writeFileSync(
+    fileName,
+    `/**
+  * NOTE: The profile-to-discordRole association format
+  * for table \`_DiscordRoleToProfile\` \`("A", "B")\` is:
+  * - \`VALUES (:discord_role_id, :profile_id)\`
+  */\n`
+  );
 
   // Parse JSON data into an array of User objects and discordRoles array
   const discordRoles = JSON.parse(readFile("jsons/discord_role_ids.json"));
@@ -50,26 +62,37 @@ client.once(Events.ClientReady, async () => {
     // get the member from the Discord Guild
     try {
       const member = await guild.members.fetch(discordUserId);
-      console.log("\tfound member.user.username:", member.user.username);
+      console.log("found member.user.username:", member.user.username);
+      // Append the username to the file
+      fs.appendFileSync(
+        fileName,
+        `/***** ${member.user.username} Profile DiscordRoles SQL *****/\n`
+      );
+
       // loop through member roles and if the role exists in `discordRoles`
       // create the upsert SQL query for it:
       for (const roleId of member._roles) {
         if (discordRoles[roleId]) {
-          console.log("\tfound roleId:", roleId);
           console.log(
-            "\tdiscordRoles[roleId].name:",
-            discordRoles[roleId].name
+            `\tfound roleId: ${roleId}\t(${discordRoles[roleId].name})`
           );
-          // TODO: save (don't log) the upsert SQL queries for this role in a
-          // file. [skplunkerin]
-          // format: `VALUES (:discord_role_id, :profile_id)`
-          console.log(`-- Set Profile Discord roles for ${member.user.username}
-INSERT INTO "public"."_DiscordRoleToProfile" ("A", "B")
+          // Append the SQL query to file
+          fs.appendFileSync(
+            fileName,
+            // profile/discordRole format:
+            //   `VALUES (:discord_role_id, :profile_id)`
+            `INSERT INTO "public"."_DiscordRoleToProfile" ("A", "B")
 VALUES (${discordRoles[roleId].discordRoleId}, ${profileId})
 ON CONFLICT ("A", "B") DO NOTHING
-;`);
+;\n`
+          );
         }
       }
+      // Append the username to the file
+      fs.appendFileSync(
+        fileName,
+        `/***** End queries for ${member.user.username} *****/\n`
+      );
     } catch (error) {
       console.error("Error fetching member:", error);
       console.log("-----");
