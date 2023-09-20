@@ -81,7 +81,8 @@ client.once(Events.ClientReady, async () => {
             fileName,
             // profile/discordRole format:
             //   `VALUES (:discord_role_id, :profile_id)`
-            `INSERT INTO "public"."_DiscordRoleToProfile" ("A", "B")
+            `-- ${discordRoles[roleId].name}
+INSERT INTO "public"."_DiscordRoleToProfile" ("A", "B")
 VALUES (${discordRoles[roleId].discordRoleId}, ${profileId})
 ON CONFLICT ("A", "B") DO NOTHING
 ;\n`
