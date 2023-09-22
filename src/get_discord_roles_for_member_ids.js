@@ -50,7 +50,21 @@ client.once(Events.ClientReady, async () => {
   );
 
   // Parse JSON data into an array of User objects and discordRoles array
+  // Example file format:
+  // {
+  //   "111111111111111111": { // Discord Server Role.id
+  //     "discordRoleId": 1, // discordRole.id
+  //     "name": "Some Role" // discordRole.name
+  //   }
+  // }
   const discordRoles = JSON.parse(readFile("jsons/discord_role_ids.json"));
+  // Example file format:
+  // [
+  //   {
+  //     "id": 1, // Profile.id
+  //     "discordUserId": "222222222222222222" // Discord User.id
+  //   }
+  // ]
   const users = JSON.parse(
     readFile("jsons/profile_ids-server_member_ids.json")
   );
