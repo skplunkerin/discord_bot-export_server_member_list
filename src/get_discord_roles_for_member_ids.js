@@ -22,7 +22,7 @@ function readFile(filePath) {
     return fileData;
   } catch (error) {
     console.error("Error reading file:", error);
-    return "";
+    throw error;
   }
 }
 
@@ -37,6 +37,7 @@ client.once(Events.ClientReady, async () => {
   const guild = client.guilds.resolve(process.env.DISCORD_GUILD_ID);
   const formattedDate = new Date().toISOString(); // Format date as 'YYYY-MM-DDThh:mm:ssZ'
   const fileName = `upsert_profile_discord_roles-${formattedDate}.sql`;
+  const errsFileName = `errors_found-${formattedDate}.log`;
 
   // Initialize the file with a header
   fs.writeFileSync(
@@ -95,9 +96,18 @@ ON CONFLICT ("A", "B") DO NOTHING
         `/***** End queries for ${member.user.username} *****/\n`
       );
     } catch (error) {
+      fs.appendFileSync(
+        errsFileName,
+        `Profile.id: ${profileId}
+Profile.discordUserId: ${discordUserId}
+Error fetching member: ${error}
+\tmessage:\t${error.rawError.message}
+\tcode:\t${error.code}
+\tstatus:\t${error.status}
+\tmethod:\t${error.method}
+\turl:\t${error.url}\n\n`
+      );
       console.error("Error fetching member:", error);
-      console.log("-----");
-      break;
     }
     console.log("-----");
   }
