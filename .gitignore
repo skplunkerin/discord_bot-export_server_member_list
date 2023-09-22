@@ -1,4 +1,6 @@
 .env
 *.csv
 node_modules
-src/discord_user_discriminators.json
+src/jsons/*
+*.sql
+*.log
